@@ -1,5 +1,8 @@
 # AI资讯收集器 (AI News Collector)
 
+[![Version](https://img.shields.io/badge/version-v1.0.0-blue.svg)](https://github.com/tincotian-byte/ai-news-collector-skill/releases)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 自动从网络搜索获取最新AI动态信息，整合国内外AI大厂及研究机构资讯。
 
 ## 功能特点
@@ -8,34 +11,59 @@
 - **智能处理**: 自动去重、中文翻译、趋势总结
 - **本地存储**: 按日期生成Markdown格式简报
 - **可视化界面**: 蓝白配色的HTML阅读器，支持多维度筛选
+- **信源可配置**: 用户可自定义编辑资讯来源
 
-## 支持的资讯来源
+---
 
-### 国际大厂
-- OpenAI (GPT系列、产品更新)
-- Anthropic (Claude系列)
-- Google DeepMind (Gemini系列)
-- Microsoft AI
-- Meta AI
+## 安装说明
 
-### 国内大厂
-- 阿里通义千问
-- 百度文心一言
-- 字节跳动豆包
-- 腾讯混元
-- 智谱AI (ChatGLM)
-- 月之暗面Kimi
-- DeepSeek
-- MiniMax
+### 方式一：直接下载（推荐普通用户）
 
-### 研究机构
-- AI2、Stanford HAI、MIT CSAIL
-- Berkeley AI Research
-- 清华AIR、中科院自动化所
+1. 访问 [GitHub Releases](https://github.com/tincotian-byte/ai-news-collector-skill/releases) 页面
+2. 下载最新版本的 `ai-news-collector-skill.zip`
+3. 解压到任意目录
+4. 将文件夹复制到 QoderWork 的 skills 目录：
+   - **Windows**: `%USERPROFILE%\.qoderwork\skills\`
+   - **macOS/Linux**: `~/.qoderwork/skills/`
+
+### 方式二：Git 克隆（推荐开发者）
+
+```bash
+# 克隆仓库
+git clone https://github.com/tincotian-byte/ai-news-collector-skill.git
+
+# 进入目录
+cd ai-news-collector-skill
+
+# 复制到 QoderWork skills 目录（Windows）
+copy . %USERPROFILE%\.qoderwork\skills\ai-news-collector\
+
+# 或 macOS/Linux
+cp -r . ~/.qoderwork/skills/ai-news-collector/
+```
+
+### 方式三：手动安装
+
+1. 点击 GitHub 页面右上角的 **Code** → **Download ZIP**
+2. 解压下载的文件
+3. 将解压后的文件夹重命名为 `ai-news-collector`
+4. 移动到 QoderWork 的 skills 目录
+
+### 验证安装
+
+安装完成后，重启 QoderWork，对 AI 助手说：
+
+```
+"收集今天的AI资讯"
+```
+
+如果 Skill 正常工作，会开始搜索并生成简报。
+
+---
 
 ## 使用方法
 
-### 1. 收集今日AI资讯
+### 1. 收集AI资讯
 
 直接对AI助手说：
 - "收集今天的AI资讯"
@@ -46,13 +74,65 @@
 
 收集完成后，打开生成的 `index.html` 文件即可浏览所有资讯。
 
-### 3. 筛选功能
+### 3. 自定义信源
 
-HTML阅读器支持以下筛选：
-- **日期范围**: 选择起止日期
-- **厂商**: 多选筛选特定厂商
-- **技术领域**: 按领域标签筛选
-- **优先级**: 高/中/低优先级
+编辑工作目录下的 `sources.json` 文件：
+
+```json
+{
+  "sources": [
+    {
+      "name": "OpenAI",
+      "category": "国际AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["openai.com/blog"],
+      "keywords": ["OpenAI", "GPT"],
+      "note": "GPT系列"
+    }
+  ]
+}
+```
+
+- `enabled`: 设为 `false` 可禁用该信源
+- 在 `sources` 数组中添加新条目可增加信源
+
+---
+
+## 支持的资讯来源
+
+### 国际大厂
+- OpenAI (GPT系列、产品更新)
+- Anthropic (Claude系列)
+- Google DeepMind (Gemini系列)
+- Microsoft AI
+- Meta AI
+- xAI
+- NVIDIA
+
+### 国内大厂
+- 阿里通义千问
+- 百度文心一言
+- 字节跳动豆包
+- 腾讯混元
+- 智谱AI (ChatGLM)
+- 月之暗面Kimi
+- DeepSeek
+- MiniMax
+- 百川智能
+- 零一万物
+- 阶跃星辰
+
+### 研究机构
+- AI2、Stanford HAI、MIT CSAIL
+- Berkeley AI Research
+- 清华AIR
+
+### 权威媒体
+- 机器之心、量子位、36氪、雷峰网
+- TechCrunch、The Verge、VentureBeat
+
+---
 
 ## 文件结构
 
@@ -60,60 +140,45 @@ HTML阅读器支持以下筛选：
 workspace/
 ├── news/                    # 每日资讯MD文件
 │   ├── 2026-03-23.md
-│   ├── 2026-03-22.md
 │   └── ...
-├── data/
-│   └── news-index.json      # 资讯索引
+├── sources.json             # 信源配置（用户可编辑）
 └── index.html               # 阅读器主页面
 ```
 
-## Markdown简报格式
+---
 
-```markdown
-# AI资讯简报 - 2026年3月23日
+## HTML 阅读器功能
 
-## AI趋势总结
-1. OpenAI发布GPT-5预览版，多模态能力大幅提升
-2. 阿里通义千问更新，支持更长上下文
-
-## 重点资讯
-
-### OpenAI - GPT-5 Preview发布
-- **来源**: [OpenAI Blog](https://openai.com/blog/...)
-- **标签**: #大模型 #多模态
-- **优先级**: 🔴 高
-- **发布时间**: 2026-03-23
-
-**中文摘要**:
-GPT-5 Preview版本正式发布，在推理能力和多模态理解方面有重大突破...
-
-**原文要点**:
-- 支持文本、图像、视频多模态输入
-- 推理能力比GPT-4提升40%
-- 知识库更新至2026年1月
+- **时间筛选**: 今天 / 最近一周(默认) / 最近一个月 / 最近一年 / 自定义
+- **趋势总结**: 基于时间范围自动聚合，最多显示4条，支持高亮
+- **侧栏筛选**: 厂商、技术领域、优先级（动态计数）
+- **视图切换**: 完整视图 / 紧凑视图
 
 ---
 
-## 全部资讯列表
-...
-```
-
-## 技术说明
-
-### 去重策略
-1. 基于标题相似度匹配
-2. 基于URL唯一性校验
-3. 24小时内相似内容自动合并
-
-### 翻译策略
-- 所有英文标题自动翻译为中文
-- 提供中文摘要
-- 保留原文链接
-
 ## 更新日志
 
-### v1.0.0
+### v1.0.0 (2026-03-23)
 - 初始版本发布
 - 支持国内外主要AI厂商资讯采集
-- 内置HTML阅读器
-- 支持多维度筛选
+- 内置HTML阅读器，支持时间筛选和趋势总结
+- 可配置信源（sources.json）
+- 智能去重和事件时间校验
+
+---
+
+## 贡献指南
+
+欢迎提交 Issue 和 PR！
+
+1. Fork 本仓库
+2. 创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 打开一个 Pull Request
+
+---
+
+## 许可证
+
+[MIT](LICENSE) © 2026 AI News Collector Team
