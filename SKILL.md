@@ -108,27 +108,31 @@ description: 自动从网络搜索获取最新AI动态信息，整合OpenAI、An
 
 文件命名 `YYYY-MM-DD.md`，存入 `news/` 目录。格式见下方模板。
 
-### 7. 生成数据文件和Markdown简报
+### 7. 生成HTML阅读器和Markdown简报
 
-**架构设计**：模板与数据分离，用户可自定义模板而不被覆盖。
+**架构设计**：生成可直接打开的单文件HTML（数据嵌入），同时保留模板供用户参考。
 
 ```
 workspace/
 ├── news/
 │   └── 2026-03-23.md          # Markdown格式简报
-├── data/
-│   └── news-data.js           # 数据文件（每次采集更新）
-├── template.html              # HTML模板（用户可自定义，不覆盖）
+├── index.html                 # HTML阅读器（数据嵌入，可直接打开）
+├── template.html              # HTML模板（参考实现，供用户自定义）
 └── sources.json               # 信源配置
 ```
 
 **生成步骤**：
 1. 读取 `news/` 下所有历史MD文件，解析为结构化数据
-2. 生成 `data/news-data.js` 数据文件（包含 NEWS_DATA、TRENDS_DATA、LAST_UPDATED）
-3. 生成 `news/YYYY-MM-DD.md` Markdown简报
-4. **不重新生成 template.html** — 用户可自行修改模板样式
+2. 生成 `news/YYYY-MM-DD.md` Markdown简报
+3. **生成 `index.html`** — 将数据和渲染逻辑嵌入单个HTML文件
+4. **保留 `template.html`** — 作为参考模板，用户可自行修改样式
 
-**数据文件格式** (`data/news-data.js`)：
+**为什么使用数据嵌入方案**：
+- 浏览器CORS安全策略禁止 `file://` 协议加载外部JS文件
+- 嵌入数据的单文件HTML可以直接双击打开，无需服务器
+- 用户如需自定义，可参考 `template.html` 修改后自行生成
+
+**数据格式**：
 ```javascript
 const NEWS_DATA = [
     {
@@ -152,17 +156,15 @@ const TRENDS_DATA = {
 const LAST_UPDATED = "2026-03-23 15:30";
 ```
 
-**HTML模板** (`template.html`)：
-- 纯静态模板，通过 `<script src="data/news-data.js">` 加载数据
-- 用户可自由修改样式、布局、功能
-- 每次采集只更新数据文件，不覆盖模板
-
 **使用方式**：
-双击打开 `template.html` 即可浏览所有资讯。支持：
+双击打开 `index.html` 即可浏览所有资讯。支持：
 - 顶部时间Tab：今天 / 最近一周(默认) / 最近一个月 / 最近一年 / 自定义
 - 趋势区：根据时间范围聚合，最多显示4条
 - 侧栏筛选：厂商、技术领域、优先级（分面搜索）
 - 视图切换：完整 / 紧凑
+
+**自定义模板**：
+如需修改样式，可参考 `template.html` 自行编辑，或告知AI需要的样式调整。
 
 ---
 
@@ -269,15 +271,14 @@ trends: ["趋势1", "趋势2", ...]
 ├── news/                    # 每日资讯MD文件
 │   ├── 2026-03-23.md
 │   └── ...
-├── data/
-│   └── news-data.js         # 数据文件（每次采集更新）
-├── template.html            # HTML模板（用户可自定义）
+├── index.html               # HTML阅读器（数据嵌入，每次采集更新）
+├── template.html            # HTML模板（参考实现，供用户自定义）
 ├── sources.json             # 信源配置（用户可编辑）
 └── README.md                # 使用说明
 ```
 
 **文件说明**：
 - `news/*.md` — Markdown格式简报，按日期存储
-- `data/news-data.js` — 结构化数据，供template.html加载
-- `template.html` — **静态模板**，用户可自由修改样式和布局
+- `index.html` — **可直接打开的阅读器**，数据和渲染逻辑嵌入其中
+- `template.html` — 参考模板，展示如何实现HTML阅读器，用户可自由修改
 - `sources.json` — 信源配置文件，可增删来源

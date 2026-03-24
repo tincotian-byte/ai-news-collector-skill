@@ -217,21 +217,39 @@
         </section>
     </main>
 
-    <!-- 加载数据文件 -->
-    <script src="data/news-data.js"></script>
+    <!--
+    ============================================
+    数据加载说明
+    ============================================
+    此模板使用外部JS文件加载数据，但在 file:// 协议下会因浏览器CORS限制而失败。
 
+    正确用法：
+    1. Skill 生成 index.html 时，会将数据直接嵌入到HTML中（而非外部加载）
+    2. 用户双击打开 index.html 即可正常浏览
+    3. 此 template.html 作为参考实现，展示HTML阅读器的结构和样式
+
+    如需自定义样式：
+    - 修改此 template.html 的CSS样式
+    - 告知AI需要的样式调整，Skill会按此模板生成新的 index.html
+    ============================================
+    -->
     <script>
+        // 数据占位符 - Skill生成index.html时会替换为真实数据
+        const NEWS_DATA = [];
+        const TRENDS_DATA = {};
+        const LAST_UPDATED = "";
+
         // 检查数据是否加载成功
-        if (typeof NEWS_DATA === 'undefined') {
+        if (typeof NEWS_DATA === 'undefined' || NEWS_DATA.length === 0) {
             document.getElementById('news-container').innerHTML = `
                 <div class="empty-state">
-                    <div class="empty-state-icon">⚠️</div>
-                    <p>数据加载失败</p>
-                    <p style="font-size: 13px; margin-top: 8px;">请确保 data/news-data.js 文件存在</p>
+                    <div class="empty-state-icon">📋</div>
+                    <p>这是HTML模板参考文件</p>
+                    <p style="font-size: 13px; margin-top: 8px;">请打开 index.html 查看实际数据</p>
                 </div>
             `;
             document.getElementById('trends-list').innerHTML = `
-                <div class="trends-empty">数据加载失败</div>
+                <div class="trends-empty">请打开 index.html 查看趋势总结</div>
             `;
         }
 
