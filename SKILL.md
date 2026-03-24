@@ -58,47 +58,61 @@ description: 自动从网络搜索获取最新AI动态信息，整合OpenAI、An
 
 文件命名 `YYYY-MM-DD.md`，存入 `news/` 目录。格式见下方模板。
 
-### 7. 生成/更新HTML阅读器
+### 7. 生成数据文件和Markdown简报
 
-**关键**：浏览器 `file://` 协议下无法 `fetch()` 本地文件，必须将数据直接嵌入HTML。
+**架构设计**：模板与数据分离，用户可自定义模板而不被覆盖。
 
-**步骤**：
+```
+workspace/
+├── news/
+│   └── 2026-03-23.md          # Markdown格式简报
+├── data/
+│   └── news-data.js           # 数据文件（每次采集更新）
+├── template.html              # HTML模板（用户可自定义，不覆盖）
+└── sources.json               # 信源配置
+```
+
+**生成步骤**：
 1. 读取 `news/` 下所有历史MD文件，解析为结构化数据
-2. 基于所有资讯数据生成趋势总结
-3. 将 `NEWS_DATA`、`TRENDS_DATA`、`LAST_UPDATED` 嵌入HTML的 `<script>` 区域
-4. 每次采集后重新生成整个 `index.html`
+2. 生成 `data/news-data.js` 数据文件（包含 NEWS_DATA、TRENDS_DATA、LAST_UPDATED）
+3. 生成 `news/YYYY-MM-DD.md` Markdown简报
+4. **不重新生成 template.html** — 用户可自行修改模板样式
 
-**数据结构**：
+**数据文件格式** (`data/news-data.js`)：
 ```javascript
 const NEWS_DATA = [
     {
-        date: "2026-03-23",       // 采集日期（Skill执行当天）
+        date: "2026-03-23",       // 采集日期
         title: "资讯标题",
         company: "厂商名",
         field: "技术领域",
         priority: "high/medium/low",
-        time: "2026-03-20",       // 事件时间（事件实际发生日期，非文章发表日期）
+        time: "2026-03-20",       // 事件时间
         source: "来源名称",
-        sourceUrl: "来源URL（优先官方链接）",
+        sourceUrl: "来源URL",
         summary: "中文摘要",
         points: ["要点1", "要点2"]
     }
 ];
 
-// 趋势按采集日期索引，HTML根据用户选择的时间范围自动聚合
 const TRENDS_DATA = {
-    "2026-03-23": [
-        "<strong>关键趋势</strong> — 详细说明，<span class='trend-highlight'>重点词</span>会高亮",
-        // 每次采集生成不超过4条趋势
-    ]
+    "2026-03-23": ["趋势1", "趋势2"]
 };
+
+const LAST_UPDATED = "2026-03-23 15:30";
 ```
 
-**HTML功能**：
-- 顶部时间Tab：今天 / 最近一周(默认) / 最近一个月 / 最近一年 / 自定义日期
-- 趋势区：根据时间范围聚合对应采集批次的趋势，最多显示4条，支持高亮
-- 侧栏筛选：厂商、技术领域、优先级（无日期），选中即时筛选，计数动态更新（分面搜索）
-- 资讯列表：卡片式，支持完整/紧凑视图切换
+**HTML模板** (`template.html`)：
+- 纯静态模板，通过 `<script src="data/news-data.js">` 加载数据
+- 用户可自由修改样式、布局、功能
+- 每次采集只更新数据文件，不覆盖模板
+
+**使用方式**：
+双击打开 `template.html` 即可浏览所有资讯。支持：
+- 顶部时间Tab：今天 / 最近一周(默认) / 最近一个月 / 最近一年 / 自定义
+- 趋势区：根据时间范围聚合，最多显示4条
+- 侧栏筛选：厂商、技术领域、优先级（分面搜索）
+- 视图切换：完整 / 紧凑
 
 ---
 
@@ -202,9 +216,18 @@ trends: ["趋势1", "趋势2", ...]
 
 ```
 {workspace}/
-├── news/              # 每日资讯MD文件
+├── news/                    # 每日资讯MD文件
 │   ├── 2026-03-23.md
 │   └── ...
-├── sources.json       # 信源配置（用户可编辑，首次自动生成）
-└── index.html         # 阅读器（数据嵌入，直接双击打开）
+├── data/
+│   └── news-data.js         # 数据文件（每次采集更新）
+├── template.html            # HTML模板（用户可自定义）
+├── sources.json             # 信源配置（用户可编辑）
+└── README.md                # 使用说明
 ```
+
+**文件说明**：
+- `news/*.md` — Markdown格式简报，按日期存储
+- `data/news-data.js` — 结构化数据，供template.html加载
+- `template.html` — **静态模板**，用户可自由修改样式和布局
+- `sources.json` — 信源配置文件，可增删来源
