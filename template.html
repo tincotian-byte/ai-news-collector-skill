@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI资讯简报 - AI News Daily</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #ffffff;
+            --bg-secondary: #f0f7ff;
+            --bg-hover: #e6f4ff;
+            --text: #1a1a2e;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --border: #d9e8f5;
+            --border-light: #edf5fc;
+            --primary: #1890ff;
+            --primary-light: #40a9ff;
+            --primary-dark: #096dd9;
+            --success: #52c41a;
+            --warning: #faad14;
+            --danger: #ff4d4f;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; }
+
+        /* ===== Header ===== */
+        .header { background: var(--bg); border-bottom: 1px solid var(--border); padding: 14px 24px; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo-icon { width: 36px; height: 36px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 700; }
+        .logo-text { font-size: 18px; font-weight: 700; }
+        .header-meta { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+        /* ===== Time Filter Bar ===== */
+        .time-bar { background: var(--bg-secondary); border-bottom: 1px solid var(--border); padding: 10px 24px; }
+        .time-bar-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .time-tabs { display: flex; gap: 0; background: var(--bg); border-radius: 8px; padding: 3px; border: 1px solid var(--border); }
+        .time-tab { padding: 6px 18px; border-radius: 6px; border: none; background: transparent; color: var(--text-secondary); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+        .time-tab:hover { color: var(--primary); background: var(--bg-hover); }
+        .time-tab.active { background: var(--primary); color: white; }
+        .custom-range { display: none; align-items: center; gap: 8px; }
+        .custom-range.visible { display: flex; }
+        .custom-range input[type="date"] { padding: 5px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; color: var(--text); background: var(--bg); }
+        .custom-range input[type="date"]:focus { outline: none; border-color: var(--primary); }
+        .custom-range .sep { font-size: 13px; color: var(--text-muted); }
+
+        /* ===== Trends ===== */
+        .trends-section { background: linear-gradient(135deg, var(--bg-secondary) 0%, #e6f7ff 100%); border-bottom: 1px solid var(--border); padding: 20px 24px; }
+        .trends-inner { max-width: 1200px; margin: 0 auto; }
+        .trends-header { font-size: 14px; font-weight: 600; color: var(--primary-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .trends-list { display: flex; flex-direction: column; gap: 8px; }
+        .trend-item { background: var(--bg); padding: 12px 16px; border-radius: 8px; border-left: 3px solid var(--primary); font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+        .trend-item strong { color: var(--primary-dark); font-weight: 600; }
+        .trend-highlight { background: linear-gradient(120deg, #fff3cd 0%, #ffeeba 100%); padding: 1px 5px; border-radius: 3px; color: var(--text); font-weight: 600; }
+        .trends-empty { font-size: 13px; color: var(--text-muted); padding: 16px; text-align: center; background: var(--bg); border-radius: 8px; }
+
+        /* ===== Stats ===== */
+        .stats { background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 24px; }
+        .stats-inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 32px; font-size: 13px; color: var(--text-secondary); }
+        .stat-item { display: flex; align-items: center; gap: 6px; }
+        .stat-value { font-weight: 700; color: var(--primary); font-size: 16px; }
+
+        /* ===== Main Layout ===== */
+        .main { max-width: 1200px; margin: 0 auto; padding: 24px; display: grid; grid-template-columns: 220px 1fr; gap: 32px; }
+
+        /* ===== Sidebar ===== */
+        .sidebar { position: sticky; top: 76px; height: fit-content; max-height: calc(100vh - 96px); overflow-y: auto; }
+        .filter-section { margin-bottom: 20px; border-bottom: 1px solid var(--border-light); padding-bottom: 16px; }
+        .filter-section:last-of-type { border-bottom: none; }
+        .filter-title { font-size: 12px; font-weight: 600; color: var(--text); letter-spacing: 0.5px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 4px 0; }
+        .filter-title::after { content: '\2212'; font-size: 14px; color: var(--text-muted); }
+        .filter-title.collapsed::after { content: '+'; }
+        .filter-content { display: flex; flex-direction: column; gap: 3px; }
+        .filter-content.collapsed { display: none; }
+        .filter-item { display: flex; align-items: center; gap: 8px; padding: 5px 8px; font-size: 13px; cursor: pointer; color: var(--text-secondary); border-radius: 4px; transition: all 0.15s; }
+        .filter-item:hover { background: var(--bg-secondary); color: var(--text); }
+        .filter-item.dimmed { opacity: 0.35; }
+        .filter-item input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
+        .filter-item .label { flex: 1; }
+        .filter-item .count { font-size: 11px; color: var(--text-muted); background: var(--bg-hover); padding: 1px 7px; border-radius: 10px; font-weight: 500; min-width: 22px; text-align: center; }
+        .clear-btn { width: 100%; padding: 10px; font-size: 12px; font-weight: 500; color: var(--primary); background: transparent; border: 1px dashed var(--border); border-radius: 6px; cursor: pointer; transition: all 0.15s; margin-top: 8px; }
+        .clear-btn:hover { border-color: var(--primary); background: var(--bg-secondary); }
+
+        /* ===== Content ===== */
+        .content { min-height: 60vh; }
+        .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+        .results-count { font-size: 13px; color: var(--text-secondary); }
+        .results-count strong { color: var(--text); font-weight: 600; }
+        .view-options { display: flex; gap: 4px; background: var(--bg-secondary); padding: 4px; border-radius: 6px; }
+        .view-btn { padding: 6px 14px; font-size: 12px; font-weight: 500; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; border-radius: 4px; transition: all 0.15s; }
+        .view-btn:hover { color: var(--text); }
+        .view-btn.active { background: var(--bg); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+        /* ===== News Cards ===== */
+        .date-group { margin-bottom: 28px; }
+        .date-header { font-size: 13px; font-weight: 600; color: var(--primary-dark); letter-spacing: 0.5px; padding: 10px 0; margin-bottom: 4px; border-bottom: 2px solid var(--primary); position: sticky; top: 60px; background: var(--bg); z-index: 10; }
+        .news-card { padding: 18px 0; border-bottom: 1px solid var(--border-light); }
+        .news-card:last-child { border-bottom: none; }
+        .news-title { font-size: 16px; font-weight: 600; line-height: 1.5; margin-bottom: 8px; color: var(--text); display: flex; align-items: flex-start; gap: 10px; }
+        .priority { display: inline-flex; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 3px; flex-shrink: 0; margin-top: 4px; letter-spacing: 0.3px; }
+        .priority-high { background: rgba(255,77,79,0.1); color: var(--danger); }
+        .priority-medium { background: rgba(250,173,20,0.1); color: var(--warning); }
+        .priority-low { background: rgba(82,196,26,0.1); color: var(--success); }
+        .news-meta { font-size: 12px; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 10px; }
+        .news-meta span { display: flex; align-items: center; gap: 4px; }
+        .news-meta a { color: var(--primary); text-decoration: none; font-weight: 500; }
+        .news-meta a:hover { text-decoration: underline; }
+        .news-summary { font-family: 'Noto Serif SC', serif; font-size: 14px; line-height: 1.8; color: var(--text-secondary); margin-bottom: 10px; }
+        .news-points { list-style: none; padding-left: 0; }
+        .news-points li { position: relative; padding-left: 14px; font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; line-height: 1.6; }
+        .news-points li::before { content: ''; position: absolute; left: 0; top: 9px; width: 4px; height: 4px; background: var(--primary); border-radius: 50%; }
+
+        /* ===== Compact View ===== */
+        .compact .news-card { padding: 12px 0; }
+        .compact .news-summary, .compact .news-points { display: none; }
+
+        /* ===== Empty ===== */
+        .empty-state { text-align: center; padding: 80px 20px; color: var(--text-muted); }
+        .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+        .empty-state p { font-size: 15px; }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .header { padding: 12px 16px; }
+            .time-bar { padding: 10px 16px; }
+            .time-bar-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .stats { padding: 10px 16px; }
+            .stats-inner { flex-wrap: wrap; gap: 16px; }
+            .main { grid-template-columns: 1fr; padding: 16px; gap: 20px; }
+            .sidebar { position: static; max-height: none; }
+            .news-title { font-size: 15px; }
+            .toolbar { flex-wrap: wrap; gap: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">AI</div>
+                <div>
+                    <div class="logo-text">AI资讯简报</div>
+                    <div class="header-meta">AI News Daily &middot; 最后更新: <span id="last-updated"></span></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== Time Filter Bar ===== -->
+    <div class="time-bar">
+        <div class="time-bar-inner">
+            <div class="time-tabs" id="time-tabs">
+                <button class="time-tab" data-range="today" onclick="setTimeRange('today',this)">今天</button>
+                <button class="time-tab active" data-range="week" onclick="setTimeRange('week',this)">最近一周</button>
+                <button class="time-tab" data-range="month" onclick="setTimeRange('month',this)">最近一个月</button>
+                <button class="time-tab" data-range="year" onclick="setTimeRange('year',this)">最近一年</button>
+                <button class="time-tab" data-range="custom" onclick="setTimeRange('custom',this)">自定义</button>
+            </div>
+            <div class="custom-range" id="custom-range">
+                <input type="date" id="custom-start" onchange="applyCustomRange()">
+                <span class="sep">至</span>
+                <input type="date" id="custom-end" onchange="applyCustomRange()">
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Trends ===== -->
+    <div class="trends-section" id="trends-section">
+        <div class="trends-inner">
+            <div class="trends-header">📊 AI趋势总结</div>
+            <div class="trends-list" id="trends-list"></div>
+        </div>
+    </div>
+
+    <!-- ===== Stats ===== -->
+    <div class="stats">
+        <div class="stats-inner">
+            <div class="stat-item"><span class="stat-value" id="stat-total">0</span> 条资讯</div>
+            <div class="stat-item"><span class="stat-value" id="stat-dates">0</span> 次采集</div>
+            <div class="stat-item"><span class="stat-value" id="stat-companies">0</span> 家厂商</div>
+            <div class="stat-item"><span class="stat-value" id="stat-high" style="color:var(--danger)">0</span> 条高优先级</div>
+        </div>
+    </div>
+
+    <!-- ===== Main ===== -->
+    <main class="main">
+        <aside class="sidebar">
+            <div class="filter-section">
+                <div class="filter-title" onclick="toggleFilter(this)">厂商</div>
+                <div class="filter-content" id="company-filters"></div>
+            </div>
+            <div class="filter-section">
+                <div class="filter-title" onclick="toggleFilter(this)">技术领域</div>
+                <div class="filter-content" id="field-filters"></div>
+            </div>
+            <div class="filter-section">
+                <div class="filter-title" onclick="toggleFilter(this)">优先级</div>
+                <div class="filter-content" id="priority-filters"></div>
+            </div>
+            <button class="clear-btn" onclick="clearSidebarFilters()">清除筛选条件</button>
+        </aside>
+
+        <section class="content">
+            <div class="toolbar">
+                <div class="results-count">显示 <strong id="filtered-count">0</strong> 条资讯</div>
+                <div class="view-options">
+                    <button class="view-btn active" onclick="setView('full',this)">完整</button>
+                    <button class="view-btn" onclick="setView('compact',this)">紧凑</button>
+                </div>
+            </div>
+            <div class="news-list" id="news-container"></div>
+        </section>
+    </main>
+
+<script>
+// ============================================================
+// DATA BEGIN — 每次采集后由 Skill 自动更新此区域
+// ============================================================
+const NEWS_DATA = [
+    {
+        date: "2026-03-23",
+        title: "文心大模型4.5及X1正式发布，全面免费开放",
+        company: "百度",
+        field: "大语言模型",
+        priority: "high",
+        time: "2026-03-16",
+        source: "百度官网",
+        sourceUrl: "https://home.baidu.com/home/index/news_detail/id/18020",
+        summary: "百度正式发布文心大模型4.5和文心大模型X1，两款模型已在文心一言官网上线，免费向用户开放。文心4.5具备原生多模态理解能力；X1专注于深度思考和复杂推理任务。",
+        points: ["文心4.5具备原生多模态理解能力，支持文本、图像、音频、视频", "文心X1专注深度思考，在数学、代码、逻辑推理方面表现突出", "两款模型均免费开放，降低用户使用门槛", "企业级API价格同步下调"]
+    },
+    {
+        date: "2026-03-23",
+        title: "豆包大模型1.6发布，强化Agent能力",
+        company: "字节跳动",
+        field: "AI Agent",
+        priority: "high",
+        time: "2026-03-18",
+        source: "新华网",
+        sourceUrl: "http://www.news.cn/tech/20260318/db9b3c0ef97d49058413563b1c434951/c.html",
+        summary: "字节跳动旗下火山引擎发布豆包大模型1.6系列，支持深度思考和工具调用，可自主操作浏览器完成订酒店、查信息等复杂任务。",
+        points: ["豆包1.6系列包含综合模型、轻量模型、代码模型", "支持自主操作浏览器，完成复杂任务流程", "深度思考能力与工具调用能力结合", "视频生成模型Seedance全面接入豆包"]
+    },
+    {
+        date: "2026-03-23",
+        title: "混元3.0将于4月发布，520亿激活参数",
+        company: "腾讯",
+        field: "大语言模型",
+        priority: "high",
+        time: "2026-03-18",
+        source: "新华网",
+        sourceUrl: "http://www.news.cn/tech/20260318/8b00d51b86ca42e88f9b98dd9134ab2e/c.html",
+        summary: "腾讯发布2025年全年业绩，AI驱动盈利创新高。混元大模型3.0版本正在内部业务测试中，计划于4月正式发布，采用520亿激活参数。",
+        points: ["混元3.0采用520亿激活参数，效率大幅提升", "正在内部业务测试中，计划4月正式发布", "腾讯2025年资本开支达792亿元，加大AI投入", "混元大模型已在700+业务场景中应用"]
+    },
+    {
+        date: "2026-03-23",
+        title: "Kimi K2.5发布并开源，推出Agent集群",
+        company: "月之暗面",
+        field: "AI Agent",
+        priority: "high",
+        time: "2026-03-20",
+        source: "证券时报",
+        sourceUrl: "https://www.stcn.com/article/detail/3621058.html",
+        summary: "月之暗面发布新一代开源模型Kimi K2.5，并推出\"Agent集群\"功能，可自主创建\"分身\"智能体协同工作，实现复杂任务的并行处理。",
+        points: ["Kimi K2.5全面开源，降低开发者使用门槛", "推出\"Agent集群\"功能，支持智能体协同", "代码能力和API响应速度大幅提升", "发布20天收入超2025全年"]
+    },
+    {
+        date: "2026-03-23",
+        title: "智谱AI港交所上市，成为\"大模型第一股\"",
+        company: "智谱AI",
+        field: "大语言模型",
+        priority: "high",
+        time: "2026-01-15",
+        source: "51CTO",
+        sourceUrl: "https://www.51cto.com/article/833777.html",
+        summary: "智谱AI在港交所正式上市，成为\"大模型第一股\"。发布GLM-4.5/4.6，定义为\"原生智能体大模型\"，2025年上半年营收同比增长超325%。",
+        points: ["智谱AI在港交所上市，成为大模型领域首家上市公司", "发布GLM-4.5/4.6，定位原生智能体大模型", "2025年上半年营收同比增长超325%"]
+    },
+    {
+        date: "2026-03-23",
+        title: "发布M2.7大模型，实现AI自我进化",
+        company: "MiniMax",
+        field: "大语言模型",
+        priority: "medium",
+        time: "2026-03-17",
+        source: "腾讯云开发者社区",
+        sourceUrl: "https://cloud.tencent.com/developer/news/3704525",
+        summary: "MiniMax发布新一代大模型M2.7，通过Agent Harness体系深度优化，实现AI自我进化新突破，能够自主学习和改进。",
+        points: ["M2.7实现AI自我进化能力", "通过Agent Harness体系深度优化", "明确\"AI平台型公司\"战略定位"]
+    },
+    {
+        date: "2026-03-23",
+        title: "Llama 4系列发布，开源生态扩大",
+        company: "Meta",
+        field: "大语言模型",
+        priority: "medium",
+        time: "2026-03-06",
+        source: "新浪财经",
+        sourceUrl: "https://finance.sina.com.cn/stock/usstock/c/2026-03-06/doc-inesefte2954625.shtml",
+        summary: "Meta发布Llama 4系列新人工智能模型，包含Scout、Maverick和Behemoth三个版本，首次举办LlamaCon开发者大会。",
+        points: ["Llama 4系列包含Scout、Maverick、Behemoth三个版本", "首次举办LlamaCon开发者大会", "开源AI生态持续扩大", "免费供研究和商业使用"]
+    },
+    {
+        date: "2026-03-23",
+        title: "GTC 2025发布Blackwell Ultra芯片",
+        company: "NVIDIA",
+        field: "AI芯片",
+        priority: "medium",
+        time: "2026-03-19",
+        source: "证券时报",
+        sourceUrl: "https://www.stcn.com/article/detail/1593335.html",
+        summary: "英伟达在GTC 2025大会上发布新一代AI芯片Blackwell Ultra，同时推出AI推理服务软件Dynamo，标志着AI推理时代全面到来。",
+        points: ["发布Blackwell Ultra芯片，2025年下半年供货", "推出Dynamo AI推理服务软件", "发布DGX Spark和DGX Station个人AI计算机", "2026年下半年将推出Vera架构芯片"]
+    }
+];
+
+// 趋势数据：按采集日期索引，每次采集生成一组趋势，HTML根据时间范围自动聚合
+const TRENDS_DATA = {
+    "2026-03-23": [
+        "<strong>国产大模型进入免费时代</strong> — 百度文心4.5/X1全面免费开放，<span class='trend-highlight'>价格战</span>加速行业洗牌，中小开发者受益明显",
+        "<strong>AI Agent能力成为核心竞争力</strong> — 字节豆包1.6、月之暗面Kimi K2.5、智谱GLM均强化Agent能力，AI从<span class='trend-highlight'>对话走向执行</span>",
+        "<strong>开源生态持续繁荣</strong> — Meta Llama 4、Kimi K2.5选择开源策略，降低开发者门槛，<span class='trend-highlight'>开源 vs 闭源</span>格局进一步演变",
+        "<strong>AI推理基础设施升级</strong> — NVIDIA发布Blackwell Ultra芯片和Dynamo软件，<span class='trend-highlight'>推理算力</span>需求持续爆发"
+    ]
+};
+
+const LAST_UPDATED = "2026-03-23 15:30";
+// ============================================================
+// DATA END
+// ============================================================
+
+let timeFiltered = [];
+let currentView = 'full';
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('last-updated').textContent = LAST_UPDATED;
+    setTimeRange('week', document.querySelector('.time-tab[data-range="week"]'));
+});
+
+// ---------- Time Range ----------
+
+function getDateRange(range) {
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+    let start = new Date(today);
+    switch (range) {
+        case 'today':  start.setHours(0,0,0,0); break;
+        case 'week':   start.setDate(start.getDate() - 7); start.setHours(0,0,0,0); break;
+        case 'month':  start.setMonth(start.getMonth() - 1); start.setHours(0,0,0,0); break;
+        case 'year':   start.setFullYear(start.getFullYear() - 1); start.setHours(0,0,0,0); break;
+        default:       start = new Date('2020-01-01');
+    }
+    return { start: fmt(start), end: fmt(today) };
+}
+
+function fmt(d) { return d.toISOString().split('T')[0]; }
+
+function setTimeRange(range, btn) {
+    document.querySelectorAll('.time-tab').forEach(t => t.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const cr = document.getElementById('custom-range');
+    if (range === 'custom') {
+        cr.classList.add('visible');
+        return;
+    }
+    cr.classList.remove('visible');
+    const { start, end } = getDateRange(range);
+    applyTimeFilter(start, end);
+}
+
+function applyCustomRange() {
+    const s = document.getElementById('custom-start').value;
+    const e = document.getElementById('custom-end').value;
+    if (s && e) applyTimeFilter(s, e);
+}
+
+function applyTimeFilter(startDate, endDate) {
+    // 按实际发布时间 (time) 筛选
+    timeFiltered = NEWS_DATA.filter(n => n.time >= startDate && n.time <= endDate);
+
+    // 清空侧栏筛选
+    clearSidebarFiltersUI();
+
+    // 更新趋势：找出在当前时间范围内有资讯的采集批次，聚合其趋势
+    updateTrends(startDate, endDate);
+
+    // 更新统计
+    updateStats(timeFiltered);
+
+    // 重建侧栏
+    rebuildSidebar(timeFiltered);
+
+    // 渲染资讯
+    renderNews(timeFiltered);
+}
+
+// ---------- Trends ----------
+
+function updateTrends(startDate, endDate) {
+    const list = document.getElementById('trends-list');
+    const collected = [];
+
+    for (const [collDate, trends] of Object.entries(TRENDS_DATA)) {
+        const hasMatch = NEWS_DATA.some(n => n.date === collDate && n.time >= startDate && n.time <= endDate);
+        if (hasMatch) trends.forEach(t => collected.push({ date: collDate, text: t }));
+    }
+
+    if (!collected.length) {
+        list.innerHTML = '<div class="trends-empty">当前时间范围内暂无趋势总结</div>';
+        return;
+    }
+
+    // 按采集日期倒序，取前4条
+    collected.sort((a, b) => b.date.localeCompare(a.date));
+    const top = collected.slice(0, 4);
+    list.innerHTML = top.map((t, i) => `<div class="trend-item"><strong>${i + 1}.</strong> ${t.text}</div>`).join('');
+}
+
+// ---------- Stats ----------
+
+function updateStats(news) {
+    document.getElementById('stat-total').textContent = news.length;
+    document.getElementById('stat-dates').textContent = new Set(news.map(n => n.date)).size;
+    document.getElementById('stat-companies').textContent = new Set(news.map(n => n.company)).size;
+    document.getElementById('stat-high').textContent = news.filter(n => n.priority === 'high').length;
+}
+
+// ---------- Sidebar ----------
+
+function rebuildSidebar(baseList) {
+    buildFilterGroup('company-filters', baseList, 'company');
+    buildFilterGroup('field-filters', baseList, 'field');
+    buildPriorityGroup(baseList);
+}
+
+function buildFilterGroup(containerId, list, key) {
+    const counts = {};
+    list.forEach(n => counts[n[key]] = (counts[n[key]] || 0) + 1);
+    const el = document.getElementById(containerId);
+    el.innerHTML = Object.entries(counts)
+        .sort((a, b) => b[1] - a[1])
+        .map(([name, count]) =>
+            `<label class="filter-item">
+                <input type="checkbox" value="${name}" onchange="applyFilters()">
+                <span class="label">${name}</span>
+                <span class="count">${count}</span>
+            </label>`
+        ).join('');
+}
+
+function buildPriorityGroup(list) {
+    const counts = { high: 0, medium: 0, low: 0 };
+    list.forEach(n => { if (counts[n.priority] !== undefined) counts[n.priority]++; });
+    const labels = { high: '高优先级', medium: '中优先级', low: '低优先级' };
+    const el = document.getElementById('priority-filters');
+    el.innerHTML = Object.entries(labels).map(([val, label]) =>
+        `<label class="filter-item${counts[val] === 0 ? ' dimmed' : ''}">
+            <input type="checkbox" value="${val}" onchange="applyFilters()"${counts[val] === 0 ? ' disabled' : ''}>
+            <span class="label">${label}</span>
+            <span class="count">${counts[val]}</span>
+        </label>`
+    ).join('');
+}
+
+// ---------- Faceted Filter ----------
+
+function getChecked(sel) {
+    return Array.from(document.querySelectorAll(sel + ' input:checked')).map(cb => cb.value);
+}
+
+function applyFilters() {
+    const sc = getChecked('#company-filters');
+    const sf = getChecked('#field-filters');
+    const sp = getChecked('#priority-filters');
+
+    const filtered = timeFiltered.filter(n => {
+        if (sc.length && !sc.includes(n.company)) return false;
+        if (sf.length && !sf.includes(n.field)) return false;
+        if (sp.length && !sp.includes(n.priority)) return false;
+        return true;
+    });
+
+    // 更新各分面计数（每个维度的计数不受自身选中项影响，只受其他维度限制）
+    updateFacetCounts(sc, sf, sp);
+
+    renderNews(filtered);
+}
+
+function updateFacetCounts(sc, sf, sp) {
+    // 厂商计数：受 field + priority 限制
+    const companyBase = timeFiltered.filter(n =>
+        (!sf.length || sf.includes(n.field)) &&
+        (!sp.length || sp.includes(n.priority))
+    );
+    updateCountsInContainer('company-filters', companyBase, 'company');
+
+    // 领域计数：受 company + priority 限制
+    const fieldBase = timeFiltered.filter(n =>
+        (!sc.length || sc.includes(n.company)) &&
+        (!sp.length || sp.includes(n.priority))
+    );
+    updateCountsInContainer('field-filters', fieldBase, 'field');
+
+    // 优先级计数：受 company + field 限制
+    const prioBase = timeFiltered.filter(n =>
+        (!sc.length || sc.includes(n.company)) &&
+        (!sf.length || sf.includes(n.field))
+    );
+    const prioCounts = { high: 0, medium: 0, low: 0 };
+    prioBase.forEach(n => { if (prioCounts[n.priority] !== undefined) prioCounts[n.priority]++; });
+    document.querySelectorAll('#priority-filters .filter-item').forEach(item => {
+        const val = item.querySelector('input').value;
+        const checked = item.querySelector('input').checked;
+        const c = prioCounts[val] || 0;
+        item.querySelector('.count').textContent = c;
+        item.classList.toggle('dimmed', !checked && c === 0);
+        item.querySelector('input').disabled = (!checked && c === 0);
+    });
+}
+
+function updateCountsInContainer(containerId, list, key) {
+    const counts = {};
+    list.forEach(n => counts[n[key]] = (counts[n[key]] || 0) + 1);
+    document.querySelectorAll('#' + containerId + ' .filter-item').forEach(item => {
+        const val = item.querySelector('input').value;
+        const checked = item.querySelector('input').checked;
+        const c = counts[val] || 0;
+        item.querySelector('.count').textContent = c;
+        item.classList.toggle('dimmed', !checked && c === 0);
+        item.querySelector('input').disabled = (!checked && c === 0);
+    });
+}
+
+function clearSidebarFiltersUI() {
+    document.querySelectorAll('.sidebar input[type="checkbox"]').forEach(cb => { cb.checked = false; cb.disabled = false; });
+    document.querySelectorAll('.sidebar .filter-item').forEach(el => el.classList.remove('dimmed'));
+}
+
+function clearSidebarFilters() {
+    clearSidebarFiltersUI();
+    rebuildSidebar(timeFiltered);
+    renderNews(timeFiltered);
+}
+
+function toggleFilter(title) {
+    title.classList.toggle('collapsed');
+    const c = title.nextElementSibling;
+    if (c) c.classList.toggle('collapsed');
+}
+
+// ---------- View ----------
+
+function setView(mode, btn) {
+    currentView = mode;
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const c = document.getElementById('news-container');
+    c.classList.remove('full', 'compact');
+    c.classList.add(mode);
+}
+
+// ---------- Render ----------
+
+function renderNews(list) {
+    const container = document.getElementById('news-container');
+    document.getElementById('filtered-count').textContent = list.length;
+
+    if (!list.length) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><p>当前筛选条件下没有资讯</p></div>';
+        return;
+    }
+
+    // 按采集日期分组
+    const grouped = {};
+    list.forEach(n => { if (!grouped[n.date]) grouped[n.date] = []; grouped[n.date].push(n); });
+    const dates = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
+
+    container.innerHTML = dates.map(date => `
+        <div class="date-group">
+            <div class="date-header">${date} 采集</div>
+            ${grouped[date]
+                .sort((a, b) => { const po = {high:0,medium:1,low:2}; return (po[a.priority]||1) - (po[b.priority]||1) || b.time.localeCompare(a.time); })
+                .map(n => `
+                <article class="news-card">
+                    <h3 class="news-title">
+                        <span class="priority priority-${n.priority}">${({high:'高',medium:'中',low:'低'})[n.priority]}</span>
+                        ${n.title}
+                    </h3>
+                    <div class="news-meta">
+                        <span>${n.time}</span>
+                        <span>${n.company}</span>
+                        <span>${n.field}</span>
+                        <a href="${n.sourceUrl}" target="_blank">${n.source} ↗</a>
+                    </div>
+                    <p class="news-summary">${n.summary}</p>
+                    ${n.points.length ? `<ul class="news-points">${n.points.map(p => `<li>${p}</li>`).join('')}</ul>` : ''}
+                </article>
+            `).join('')}
+        </div>
+    `).join('');
+
+    container.classList.add(currentView);
+}
+</script>
+</body>
+</html>

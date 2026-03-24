@@ -1,0 +1,285 @@
+{
+  "_说明": "AI资讯信源配置文件。用户可直接编辑此文件增删信源。设置 enabled=false 可临时禁用某信源。",
+  "_tier说明": "1=官方一手来源（事件时间最可靠）; 2=权威科技媒体（需核实事件时间）; 3=研究机构",
+  "sources": [
+    {
+      "name": "OpenAI",
+      "category": "国际AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["openai.com/blog", "openai.com/index"],
+      "keywords": ["OpenAI", "GPT", "ChatGPT", "o1", "o3"],
+      "note": "GPT系列、ChatGPT、o系列推理模型"
+    },
+    {
+      "name": "Anthropic",
+      "category": "国际AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["anthropic.com/news", "anthropic.com/research"],
+      "keywords": ["Anthropic", "Claude"],
+      "note": "Claude系列"
+    },
+    {
+      "name": "Google DeepMind",
+      "category": "国际AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["blog.google/technology/ai", "deepmind.google/blog"],
+      "keywords": ["Google", "Gemini", "DeepMind"],
+      "note": "Gemini系列、DeepMind研究"
+    },
+    {
+      "name": "Microsoft",
+      "category": "国际AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["blogs.microsoft.com/ai", "azure.microsoft.com/en-us/blog"],
+      "keywords": ["Microsoft AI", "Copilot", "Azure AI"],
+      "note": "Copilot、Azure AI"
+    },
+    {
+      "name": "Meta AI",
+      "category": "国际AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["ai.meta.com/blog"],
+      "keywords": ["Meta AI", "Llama"],
+      "note": "Llama系列"
+    },
+    {
+      "name": "xAI",
+      "category": "国际AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["x.ai/blog"],
+      "keywords": ["xAI", "Grok"],
+      "note": "Grok系列"
+    },
+    {
+      "name": "NVIDIA",
+      "category": "国际AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["nvidianews.nvidia.com", "blogs.nvidia.com"],
+      "keywords": ["NVIDIA", "英伟达", "Blackwell", "GTC"],
+      "note": "AI芯片、GTC大会"
+    },
+    {
+      "name": "百度/文心",
+      "category": "国内AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["yiyan.baidu.com", "cloud.baidu.com/article"],
+      "keywords": ["百度", "文心一言", "文心大模型", "ERNIE"],
+      "note": "文心一言系列"
+    },
+    {
+      "name": "阿里/通义",
+      "category": "国内AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["tongyi.aliyun.com", "qwenlm.github.io"],
+      "keywords": ["阿里", "通义千问", "Qwen"],
+      "note": "通义千问系列"
+    },
+    {
+      "name": "字节/豆包",
+      "category": "国内AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["doubao.com", "volcengine.com"],
+      "keywords": ["字节跳动", "豆包", "火山引擎", "doubao"],
+      "note": "豆包系列"
+    },
+    {
+      "name": "腾讯/混元",
+      "category": "国内AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["hunyuan.tencent.com"],
+      "keywords": ["腾讯", "混元", "腾讯AI"],
+      "note": "混元系列"
+    },
+    {
+      "name": "智谱AI",
+      "category": "国内AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["chatglm.cn", "zhipuai.cn"],
+      "keywords": ["智谱AI", "GLM", "ChatGLM"],
+      "note": "GLM系列"
+    },
+    {
+      "name": "月之暗面",
+      "category": "国内AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["kimi.moonshot.cn", "moonshot.cn"],
+      "keywords": ["月之暗面", "Kimi", "moonshot"],
+      "note": "Kimi系列"
+    },
+    {
+      "name": "DeepSeek",
+      "category": "国内AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["deepseek.com", "github.com/deepseek-ai"],
+      "keywords": ["DeepSeek", "深度求索"],
+      "note": "DeepSeek系列"
+    },
+    {
+      "name": "MiniMax",
+      "category": "国内AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["minimaxi.com", "hailuoai.com"],
+      "keywords": ["MiniMax", "海螺AI"],
+      "note": "海螺AI"
+    },
+    {
+      "name": "百川智能",
+      "category": "国内AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["baichuan-ai.com"],
+      "keywords": ["百川智能", "百川大模型"],
+      "note": "百川系列"
+    },
+    {
+      "name": "零一万物",
+      "category": "国内AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["01.ai"],
+      "keywords": ["零一万物", "Yi"],
+      "note": "Yi系列"
+    },
+    {
+      "name": "阶跃星辰",
+      "category": "国内AI大厂",
+      "tier": 1,
+      "enabled": true,
+      "urls": ["stepfun.com"],
+      "keywords": ["阶跃星辰", "跃问", "Step"],
+      "note": "跃问"
+    },
+    {
+      "name": "机器之心",
+      "category": "权威科技媒体",
+      "tier": 2,
+      "enabled": true,
+      "urls": ["jiqizhixin.com"],
+      "keywords": ["机器之心"],
+      "note": "中文AI深度报道"
+    },
+    {
+      "name": "量子位",
+      "category": "权威科技媒体",
+      "tier": 2,
+      "enabled": true,
+      "urls": ["qbitai.com"],
+      "keywords": ["量子位"],
+      "note": "中文AI资讯"
+    },
+    {
+      "name": "36氪AI频道",
+      "category": "权威科技媒体",
+      "tier": 2,
+      "enabled": true,
+      "urls": ["36kr.com"],
+      "keywords": ["36氪 AI", "36kr AI"],
+      "note": "中文科技资讯"
+    },
+    {
+      "name": "雷峰网",
+      "category": "权威科技媒体",
+      "tier": 2,
+      "enabled": true,
+      "urls": ["leiphone.com"],
+      "keywords": ["雷峰网 AI"],
+      "note": "中文AI深度"
+    },
+    {
+      "name": "TechCrunch",
+      "category": "权威科技媒体",
+      "tier": 2,
+      "enabled": true,
+      "urls": ["techcrunch.com/category/artificial-intelligence"],
+      "keywords": ["TechCrunch AI"],
+      "note": "英文，需翻译"
+    },
+    {
+      "name": "The Verge",
+      "category": "权威科技媒体",
+      "tier": 2,
+      "enabled": true,
+      "urls": ["theverge.com/ai-artificial-intelligence"],
+      "keywords": ["The Verge AI"],
+      "note": "英文，需翻译"
+    },
+    {
+      "name": "VentureBeat",
+      "category": "权威科技媒体",
+      "tier": 2,
+      "enabled": true,
+      "urls": ["venturebeat.com/ai"],
+      "keywords": ["VentureBeat AI"],
+      "note": "英文，需翻译"
+    },
+    {
+      "name": "Ars Technica",
+      "category": "权威科技媒体",
+      "tier": 2,
+      "enabled": true,
+      "urls": ["arstechnica.com/ai"],
+      "keywords": ["Ars Technica AI"],
+      "note": "英文，需翻译"
+    },
+    {
+      "name": "AI2",
+      "category": "研究机构",
+      "tier": 3,
+      "enabled": true,
+      "urls": ["allenai.org"],
+      "keywords": ["Allen AI", "AI2"],
+      "note": "Allen Institute for AI"
+    },
+    {
+      "name": "Stanford HAI",
+      "category": "研究机构",
+      "tier": 3,
+      "enabled": true,
+      "urls": ["hai.stanford.edu"],
+      "keywords": ["Stanford HAI", "Stanford AI"],
+      "note": "斯坦福人类中心AI研究院"
+    },
+    {
+      "name": "MIT CSAIL",
+      "category": "研究机构",
+      "tier": 3,
+      "enabled": true,
+      "urls": ["csail.mit.edu"],
+      "keywords": ["MIT CSAIL", "MIT AI"],
+      "note": "MIT计算机科学与人工智能实验室"
+    },
+    {
+      "name": "Berkeley BAIR",
+      "category": "研究机构",
+      "tier": 3,
+      "enabled": true,
+      "urls": ["bair.berkeley.edu"],
+      "keywords": ["Berkeley AI", "BAIR"],
+      "note": "伯克利人工智能研究院"
+    },
+    {
+      "name": "清华AIR",
+      "category": "研究机构",
+      "tier": 3,
+      "enabled": true,
+      "urls": ["air.tsinghua.edu.cn"],
+      "keywords": ["清华AIR", "清华AI"],
+      "note": "清华大学智能产业研究院"
+    }
+  ]
+}
