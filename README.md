@@ -17,47 +17,79 @@
 
 ## 安装说明
 
-### 方式一：直接下载（推荐普通用户）
+本 Skill 同时支持 **QoderWork** 和 **Claude** 两种 AI 工具。
+
+### QoderWork 安装
+
+#### 方式一：直接下载（推荐）
 
 1. 访问 [GitHub Releases](https://github.com/tincotian-byte/ai-news-collector-skill/releases) 页面
 2. 下载最新版本的 `ai-news-collector-skill.zip`
-3. 解压到任意目录
-4. 将文件夹复制到 QoderWork 的 skills 目录：
+3. 解压到 QoderWork 的 skills 目录：
    - **Windows**: `%USERPROFILE%\.qoderwork\skills\`
    - **macOS/Linux**: `~/.qoderwork/skills/`
 
-### 方式二：Git 克隆（推荐开发者）
+#### 方式二：Git 克隆
 
 ```bash
-# 克隆仓库
 git clone https://github.com/tincotian-byte/ai-news-collector-skill.git
 
-# 进入目录
-cd ai-news-collector-skill
+# Windows
+copy ai-news-collector-skill %USERPROFILE%\.qoderwork\skills\ai-news-collector\
 
-# 复制到 QoderWork skills 目录（Windows）
-copy . %USERPROFILE%\.qoderwork\skills\ai-news-collector\
-
-# 或 macOS/Linux
-cp -r . ~/.qoderwork/skills/ai-news-collector/
+# macOS/Linux
+cp -r ai-news-collector-skill ~/.qoderwork/skills/ai-news-collector/
 ```
 
-### 方式三：手动安装
+#### 验证安装
 
-1. 点击 GitHub 页面右上角的 **Code** → **Download ZIP**
-2. 解压下载的文件
-3. 将解压后的文件夹重命名为 `ai-news-collector`
-4. 移动到 QoderWork 的 skills 目录
+重启 QoderWork，对 AI 助手说：`"收集今天的AI资讯"`
 
-### 验证安装
+---
 
-安装完成后，重启 QoderWork，对 AI 助手说：
+### Claude 安装
 
-```
-"收集今天的AI资讯"
-```
+#### 方式一：Claude 客户端安装（推荐）
 
-如果 Skill 正常工作，会开始搜索并生成简报。
+1. 打开 Claude 客户端，进入 **Settings** → **Skills**
+2. 点击 **Install Skill** 或 **Add Skill**
+3. 选择 **From GitHub** 或 **From URL**
+4. 输入仓库地址：`https://github.com/tincotian-byte/ai-news-collector-skill`
+5. 点击安装，等待完成
+
+#### 方式二：手动安装
+
+1. 下载本仓库的 ZIP 文件并解压
+2. 打开 Claude 客户端，进入 **Settings** → **Skills**
+3. 点击 **Install from Folder**
+4. 选择解压后的 `ai-news-collector-skill` 文件夹
+5. 重启 Claude 客户端
+
+#### 方式三：Claude Web 版（claude.ai）
+
+1. 访问 [claude.ai](https://claude.ai)
+2. 点击左下角 **Settings** → **Skills**
+3. 点击 **+ Add Skill**
+4. 粘贴 GitHub 仓库地址：`https://github.com/tincotian-byte/ai-news-collector-skill`
+5. 点击 **Install**
+
+#### 验证安装
+
+在 Claude 对话中输入：`"收集今天的AI资讯"` 或 `"获取最新AI动态"`
+
+如果 Skill 正常加载，Claude 会开始搜索并生成简报。
+
+---
+
+### 通用手动安装（任意 AI 工具）
+
+如果上述方式不适用：
+
+1. 下载本仓库源码
+2. 找到你的 AI 工具的 skills 目录（通常名为 `.skills`、`skills` 或 `agents/skills`）
+3. 将本文件夹复制到该目录下，重命名为 `ai-news-collector`
+4. 重启 AI 工具
+5. 测试指令：`"收集今天的AI资讯"`
 
 ---
 
