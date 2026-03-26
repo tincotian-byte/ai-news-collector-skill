@@ -166,6 +166,26 @@ const LAST_UPDATED = "2026-03-23 15:30";
 **自定义模板**：
 如需修改样式，可参考 `template.html` 自行编辑，或告知AI需要的样式调整。
 
+### 8. 最终输出
+
+采集完成后，向用户展示以下信息：
+
+```
+✅ AI资讯采集完成
+
+📊 本次采集: X条新资讯
+📁 Markdown简报: {workspace}/news/YYYY-MM-DD.md
+🌐 HTML阅读器: {workspace}/index.html
+
+📋 可直接访问的链接:
+file://{workspace}/index.html
+```
+
+**输出要求**：
+1. **必须显示完整路径**：`{workspace}/index.html` 的绝对路径
+2. **提供file协议链接**：用户可直接点击 `file://...` 链接在浏览器中打开
+3. **路径可复制**：确保路径文本便于用户复制粘贴
+
 ---
 
 ## 信源配置
